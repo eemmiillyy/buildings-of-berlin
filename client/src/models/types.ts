@@ -20,8 +20,8 @@ export interface ImpressionItem {
     id: string;
     buildingId: string;
     content: string;
-    photos: string[];
-    hyperlinks: string[];
+    photos?: string[];
+    hyperlinks?: string[];
     moods: Mood[],
     createdAt: string;
 }

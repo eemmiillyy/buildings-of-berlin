@@ -13,6 +13,11 @@ async function getBuildings() {
     return response.data;
 }
 
+async function getImpressions(buildingId: string) {
+    const response = await apiClient.get(`/buildings/${buildingId}/impressions`);
+    return response.data;
+}
+
 // Variables for drag functionality
 let activeElement: HTMLElement | null = null;
 let initialX: number, initialY: number, offsetX: number, offsetY: number;
@@ -95,7 +100,8 @@ export function createBuildingMarker(building: BuildingItem): HTMLElement {
     // Add event listeners for the view-impressions button
     const viewButton = infoCard.querySelector('.view-impressions');
     if (viewButton) {
-        viewButton.addEventListener('click', (e) => {
+        viewButton.addEventListener('click', async (e) => {
+            const impressions = await getImpressions(building.id);
             e.stopPropagation(); // Prevent other click handlers
             openImpressionsDrawer(building.id, building, impressions);
         });

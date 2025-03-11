@@ -85,7 +85,7 @@ function createImpressionsListContent(building: BuildingItem, impressions: Impre
             
             metaDiv.appendChild(dateSpan);
             
-            if (impression.photos.length > 0) {
+            if (impression.photos && impression.photos.length > 0) {
                 const photosSpan = document.createElement('span');
                 photosSpan.textContent = `${impression.photos.length} photos`;
                 metaDiv.appendChild(photosSpan);
@@ -100,7 +100,7 @@ function createImpressionsListContent(building: BuildingItem, impressions: Impre
             impressionDiv.appendChild(contentDiv);
             impressionDiv.appendChild(metaDiv);
             
-            if (impression.hyperlinks.length > 0) {
+            if (impression.hyperlinks && impression.hyperlinks.length > 0) {
                 const linksDiv = document.createElement('div');
                 linksDiv.className = 'impression-links';
                 
@@ -113,7 +113,7 @@ function createImpressionsListContent(building: BuildingItem, impressions: Impre
                     
                     linksDiv.appendChild(linkElement);
                     
-                    if (index < impression.hyperlinks.length - 1) {
+                    if (index < (impression.hyperlinks?.length ?? 0) - 1) {
                         linksDiv.appendChild(document.createElement('br'));
                     }
                 });
