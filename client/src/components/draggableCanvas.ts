@@ -48,7 +48,6 @@ export function createBuildingMarker(building: BuildingItem): HTMLElement {
         <p><strong>Era:</strong> ${building.era}</p>
         <div class="building-info-actions">
             <button class="view-impressions">view impressions ${generateMood('eyes')}</button>
-            <button class="add-impression">add impression ${generateMood('thinking')}</button>
         </div>
     `;
     
