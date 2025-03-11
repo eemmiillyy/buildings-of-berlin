@@ -1,8 +1,9 @@
 import { ImpressionItem, BuildingItem } from '../models/types';
+import apiClient from '../services/apiClient';
 import { generateMood } from '../utils';
 import { openAddImpressionForm, resetForm } from './addImpressionForm';
-import { openDrawer, closeDrawer, updateDrawerTitle, updateDrawerContent } from './drawer';
-
+import { openDrawer, updateDrawerTitle, updateDrawerContent } from './drawer';
+import { v4 as uuidv4 } from 'uuid';
 let currentBuildingId: string | null = null;
 let currentBuilding: BuildingItem | null = null;
 let allImpressions: ImpressionItem[] = [];
@@ -154,12 +155,14 @@ function showAddImpressionForm(): void {
  * Handles the submission of a new impression
  * @param impression The new impression data
  */
-function handleImpressionSubmit(impression: Omit<ImpressionItem, 'id'>): void {
+async function handleImpressionSubmit(impression: Omit<ImpressionItem, 'id'>): Promise<void> {
     // Generate a unique ID for the impression
     const newImpression: ImpressionItem = {
         ...impression,
-        id: `impression${Date.now()}`
+        id: uuidv4()
     };
+    
+    const response = await apiClient.post(`/buildings/${currentBuildingId}/impressions`, newImpression);
     
     // Add the impression to the list
     allImpressions.push(newImpression);
