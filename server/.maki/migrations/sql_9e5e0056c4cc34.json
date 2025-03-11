@@ -1,0 +1,10 @@
+{
+  "name": "sql_9e5e0056c4cc34",
+  "operations": [
+    {
+      "sql": {
+        "up": "ALTER TABLE \"public\".\"impressions\"\nADD COLUMN \"content\" text;"
+      }
+    }
+  ]
+}

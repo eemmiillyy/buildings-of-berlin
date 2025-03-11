@@ -1,0 +1,10 @@
+{
+  "name": "sql_39103e841a3a07",
+  "operations": [
+    {
+      "sql": {
+        "up": "CREATE TABLE \"public\".\"buildings\" (\"id\" serial, PRIMARY KEY (\"id\"));"
+      }
+    }
+  ]
+}

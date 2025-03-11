@@ -1,0 +1,10 @@
+{
+  "name": "sql_1441bfe832ca9c",
+  "operations": [
+    {
+      "sql": {
+        "up": "ALTER TABLE \"public\".\"impressions\" ADD FOREIGN KEY (\"buildingId\") REFERENCES \"public\".\"buildings\" (\"id\");"
+      }
+    }
+  ]
+}

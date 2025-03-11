@@ -1,0 +1,10 @@
+{
+  "name": "sql_5c9a2cc816668c",
+  "operations": [
+    {
+      "sql": {
+        "up": "ALTER TABLE \"public\".\"buildings\"\nDROP COLUMN \"id\";"
+      }
+    }
+  ]
+}

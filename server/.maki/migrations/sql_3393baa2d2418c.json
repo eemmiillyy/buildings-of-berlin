@@ -1,0 +1,10 @@
+{
+  "name": "sql_3393baa2d2418c",
+  "operations": [
+    {
+      "sql": {
+        "up": "ALTER TABLE \"public\".\"buildings\"\nADD COLUMN \"designer\" text NOT NULL;"
+      }
+    }
+  ]
+}

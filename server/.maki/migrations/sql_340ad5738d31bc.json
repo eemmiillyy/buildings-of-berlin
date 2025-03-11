@@ -1,0 +1,10 @@
+{
+  "name": "sql_340ad5738d31bc",
+  "operations": [
+    {
+      "sql": {
+        "up": "ALTER TABLE \"public\".\"impressions\" ALTER COLUMN \"id\" SET NOT NULL;"
+      }
+    }
+  ]
+}

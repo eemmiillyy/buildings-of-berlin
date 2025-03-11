@@ -1,0 +1,10 @@
+{
+  "name": "sql_5904dc97d00090",
+  "operations": [
+    {
+      "sql": {
+        "up": "ALTER TABLE \"public\".\"buildings\"\nADD COLUMN \"createdAt\" timestamptz NOT NULL DEFAULT NOW();"
+      }
+    }
+  ]
+}

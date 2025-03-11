@@ -1,0 +1,10 @@
+{
+  "name": "sql_dffa7022672441",
+  "operations": [
+    {
+      "sql": {
+        "up": "ALTER TABLE \"public\".\"impressions\"\nADD COLUMN \"buildingId\" uuid NOT NULL;"
+      }
+    }
+  ]
+}

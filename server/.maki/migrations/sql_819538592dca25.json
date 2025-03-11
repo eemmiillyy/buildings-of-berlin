@@ -1,0 +1,10 @@
+{
+  "name": "sql_819538592dca25",
+  "operations": [
+    {
+      "sql": {
+        "up": "ALTER TABLE buildings\nADD CONSTRAINT id UNIQUE (id);"
+      }
+    }
+  ]
+}

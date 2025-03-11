@@ -1,0 +1,10 @@
+{
+  "name": "sql_c08911073151a6",
+  "operations": [
+    {
+      "sql": {
+        "up": "ALTER TABLE \"public\".\"buildings\"\nADD COLUMN \"ycoordinate\" int4 NOT NULL;"
+      }
+    }
+  ]
+}

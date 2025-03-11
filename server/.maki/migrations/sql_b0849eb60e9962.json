@@ -1,0 +1,10 @@
+{
+  "name": "sql_b0849eb60e9962",
+  "operations": [
+    {
+      "sql": {
+        "up": "CREATE TABLE \"public\".\"impressions\" (\"id\" serial, PRIMARY KEY (\"id\"));"
+      }
+    }
+  ]
+}
