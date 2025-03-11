@@ -1,0 +1,436 @@
+body {
+    margin: 0;
+    font-family: monospace, 'Courier New', Courier, fixed-width;
+    padding: 0;
+    color: #000;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.app-container {
+    display: flex;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+/* Sidebar styles */
+.sidebar {
+    width: 200px;
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.sidebar h1 {
+    margin-top: 0;
+    font-size: 24px;
+}
+
+.sidebar p {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+/* Main content styles */
+.main-content {
+    flex: 1;
+    padding: 5px;
+    overflow-y: hidden;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.status-bar {
+    padding: 10px;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.canvas-container {
+    background-color: #fff;
+    border: 1px solid #000;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background-image: url('../../ascii-art.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    /* background-blend-mode: lighten; */
+    /* background-color: rgba(255, 255, 255, 0.9); */
+}
+
+.draggable {
+    position: absolute;
+    padding: 10px;
+    cursor: move;
+    font-size: 10px;
+    min-width: 150px;
+    background-color: babyblue;
+    
+    /* Create fading edges with a gradient background */
+    background: radial-gradient(
+        ellipse at center,
+        rgba(255, 255, 255, 1) 60%,
+        rgba(255, 255, 255, 0.8) 80%,
+        rgba(255, 255, 255, 0.4) 100%
+    );
+    
+}
+
+/* Improve text readability */
+.draggable h3, .draggable p {
+    position: relative; /* Keep text above the gradient */
+    z-index: 1;
+}
+
+.draggable h3 {
+    margin-top: 0;
+    padding-bottom: 5px;
+    font-size: 16px;
+}
+
+.draggable p {
+    margin-bottom: 0;
+    font-size: 14px;
+}
+
+/* X Marker styles */
+.building-marker {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    color: #333;
+    z-index: 10;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.building-marker:hover {
+    transform: scale(1.2);
+    color: #000;
+}
+
+/* Building info card that appears on hover */
+.building-info {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    width: 200px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    pointer-events: auto;
+    top: 25px;
+    left: 0;
+}
+
+/* Show the info card when marker is hovered or info card has hover class */
+.building-marker:hover .building-info,
+.building-info.hover {
+    opacity: 1;
+    visibility: visible;
+}
+
+.building-info h3 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.building-info p {
+    margin: 3px 0;
+    font-size: 12px;
+}
+
+.building-info-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+}
+
+.building-info-actions button {
+    font-size: 10px;
+    padding: 3px 6px;
+    cursor: pointer;
+}
+
+/* Apply font-family to all elements including form controls */
+body, 
+button, 
+input, 
+select, 
+textarea,
+.building-info-actions button {
+    font-family: monospace, 'Courier New', Courier, fixed-width;
+}
+
+/* You can also use the universal selector, but this might have other side effects */
+/* * {
+    font-family: monospace, 'Courier New', Courier, fixed-width;
+} */
+
+/* Drawer Component */
+.drawer {
+    position: fixed;
+    top: 0;
+    right: -480px; /* Start off-screen */
+    width: 480px;
+    height: 100vh;
+    background-color: white;
+    border-left: 1px solid #ccc;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.drawer.open {
+    right: 0;
+}
+
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #000;
+}
+
+.drawer-header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.close-drawer {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.impression-item {
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #eee;
+    background-color: #f9f9f9;
+}
+
+.impression-content {
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.impression-meta {
+    font-size: 12px;
+    color: #666;
+    display: flex;
+    justify-content: space-between;
+}
+
+.no-impressions {
+    text-align: center;
+    padding: 30px;
+    color: #666;
+}
+
+/* Overlay for when drawer is open */
+.drawer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 999;
+    display: none;
+}
+
+.drawer-overlay.active {
+    display: block;
+}
+
+/* Add Impression Form */
+.add-impression-form {
+    background-color: white;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Add Building Form */
+.add-building-form {
+    background-color: white;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.add-building-form h3,
+.add-impression-form h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    font-family: monospace, 'Courier New', Courier, fixed-width;
+    font-size: 14px;
+    background-color: white;
+    box-sizing: border-box;
+}
+
+/* Add this to your existing CSS */
+.drawer-actions {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.add-impression-btn,
+.add-building-btn {
+    background: none;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.add-impression-btn:hover,
+.add-building-btn:hover {
+    background-color: #f5f5f5;
+}
+
+.mood-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.mood-option {
+    display: inline-flex;
+    align-items: center;
+    background: #f5f5f5;
+    padding: 5px 10px;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid transparent;
+}
+
+.mood-option.selected {
+    background: #e0e0e0;
+    border-color: #999;
+}
+
+.mood-option span {
+    margin-right: 5px;
+}
+
+.link-list {
+    margin-top: 10px;
+}
+
+.link-item {
+    display: flex;
+    margin-bottom: 5px;
+}
+
+.link-item input {
+    flex-grow: 1;
+    margin-right: 5px;
+}
+
+.link-item button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #999;
+}
+
+.add-link-btn {
+    background: none;
+    border: 1px dashed #ccc;
+    padding: 5px;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.form-actions button {
+    padding: 8px 15px;
+    cursor: pointer;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+}
+
+.form-actions button[type="submit"] {
+    background-color: #333;
+    color: white;
+    border-color: #333;
+}
+
+.form-actions button:hover {
+    opacity: 0.9;
+}
+
+/* Temporary marker styles */
+.temporary-marker {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 16px;
+  color: lightgreen; /* light pink color to distinguish from regular markers */
+  z-index: 100;
+  pointer-events: none; /* Make it non-interactive */
+  opacity: 0.7;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+} 

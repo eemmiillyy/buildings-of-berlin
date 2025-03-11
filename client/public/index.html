@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buildings of Berlin</title>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <h1>Buildings of Berlin</h1>
+            <p>A collection of buildings and textual impressions in Berlin</p>
+            <button id="toggle-list-view">List View</button>
+            <button id="toggle-map-view">Map View</button>
+            <select id="era-filter">
+                <option value="all">All Eras</option>
+                <option value="postmodernism">Postmodernism</option>
+                <option value="modernism">Modernism</option>
+                <option value="baroque">Baroque</option>
+            </select>
+            <select id="neighbourhood-filter">
+                <option value="all">All neighbourhoods</option>
+                <option value="kreuzberg">Kreuzberg</option>
+                <option value="mitte">Mitte</option>
+                <option value="charlottenburg">Charlottenburg</option>
+            </select>
+            <select id="designer-filter"> 
+                <option value="all">All Designers</option>
+                <option value="hejduk">John Hejduk</option>
+                <option value="eisenmann">Peter Eisenmann</option>
+                <option value="moneo">Tadao Ando</option>
+            </select>
+        </div>
+        
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <div class="canvas-container" id="canvas">
+                <!-- Draggable items will be created by JavaScript -->
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

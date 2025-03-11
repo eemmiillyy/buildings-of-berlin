@@ -7,6 +7,7 @@ const router = express.Router();
 router.get('/buildings', async (req, res) => {
   try {
     const result = await query('SELECT * FROM buildings ORDER BY "createdAt" DESC');
+    console.log(result.rows);
     res.json(result.rows);
   } catch (err) {
     console.error('Error fetching buildings:', err);
