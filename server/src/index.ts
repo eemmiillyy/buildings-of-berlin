@@ -11,8 +11,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
 app.use(express.json());
+
+app.use(cors({
+    origin: process.env.NODE_ENV === 'production' ? 'https://buildings-of-berlin-frontend.vercel.app/' : 'http://localhost:8080',
+  }));
 
 // Connect API routes
 app.use('/api', apiRouter);
