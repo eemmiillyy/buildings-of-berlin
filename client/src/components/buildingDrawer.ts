@@ -1,7 +1,8 @@
 import { BuildingItem } from '../models/types';
-import { openDrawer, updateDrawerTitle, updateDrawerContent, closeDrawer } from './drawer';
+import { openDrawer, closeDrawer } from './drawer';
 import { openAddBuildingForm, resetBuildingForm } from './addBuildingForm';
-
+import apiClient from '../services/apiClient';
+import { v4 as uuidv4 } from 'uuid';
 let allBuildings: BuildingItem[] = [];
 let onBuildingAdded: ((building: BuildingItem) => void) | null = null;
 let initialX: number | null = null;
@@ -50,16 +51,17 @@ export function openAddBuildingDrawer(x?: number, y?: number): void {
  * Handles the submission of a new building
  * @param building The new building data
  */
-function handleBuildingSubmit(building: Omit<BuildingItem, 'id'>): void {
+async function handleBuildingSubmit(building: Omit<BuildingItem, 'id'>): Promise<void> {
   // Generate a unique ID for the building
   const newBuilding: BuildingItem = {
     ...building,
-    id: `building${Date.now()}`,
-    createdAt: new Date().toISOString(),
-    // Use the stored coordinates if available, otherwise use the ones from the form
-    xcoordinate: initialX !== null ? initialX : building.xcoordinate,
-    ycoordinate: initialY !== null ? initialY : building.ycoordinate
+    id: uuidv4(),
+    // Adjust coordinates to center the marker (subtract half of marker width/height - 20px/2)
+    xcoordinate: initialX !== null ? initialX - 10 : building.xcoordinate,
+    ycoordinate: initialY !== null ? initialY - 10 : building.ycoordinate
   };
+
+  await apiClient.post('/buildings', newBuilding);
   
   // Add the building to the list
   allBuildings.push(newBuilding);
