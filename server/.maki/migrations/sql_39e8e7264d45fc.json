@@ -1,0 +1,10 @@
+{
+  "name": "sql_39e8e7264d45fc",
+  "operations": [
+    {
+      "sql": {
+        "up": "ALTER TABLE \"public\".\"buildings\"\nADD COLUMN \"photos\" jsonb;"
+      }
+    }
+  ]
+}

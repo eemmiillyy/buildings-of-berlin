@@ -1,4 +1,5 @@
 import { BuildingItem, ImpressionItem } from '../models/types';
+import { cleanupTemporaryMarker } from './draggableCanvas';
 
 // Drawer state
 let drawerElement: HTMLElement | null = null;
@@ -121,8 +122,24 @@ export function updateDrawerContent(content: HTMLElement): void {
  * Closes the drawer
  */
 export function closeDrawer(): void {
-  drawerElement?.classList.remove('open');
-  overlayElement?.classList.remove('active');
+  if (!drawerElement) return;
+  
+  // Remove temporary marker
+  cleanupTemporaryMarker();
+  
+  // Remove disabled class from map
+  const mapElement = document.getElementById('canvas');
+  if (mapElement) {
+    mapElement.classList.remove('map-disabled');
+  }
+  
+  // Hide overlay
+  if (overlayElement) {
+    overlayElement.classList.remove('active');
+  }
+  
+  // Close drawer
+  drawerElement.classList.remove('open');
   isDrawerOpen = false;
   currentContent = null;
   

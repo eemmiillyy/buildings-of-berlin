@@ -33,8 +33,8 @@ export interface BuildingItem {
     year: string;
     neighbourhood: string;
     era: string;
-    xcoordinate: number;
-    ycoordinate: number;
+    xcoordinate: number; // longitude
+    ycoordinate: number; // latitude
     createdAt: string;
 }
 
