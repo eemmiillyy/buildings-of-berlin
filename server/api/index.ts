@@ -182,9 +182,11 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 app.use(cors({
-    origin: process.env.NODE_ENV === 'production' ? 'https://buildings-of-berlin-fe.netlify.app' : 'http://localhost:8080',
-  }));
-
+  origin: process.env.NODE_ENV === 'production' 
+    ? 'https://buildings-of-berlin-fe.netlify.app' 
+    : 'http://localhost:8080',
+  credentials: true
+}));
 // Connect API routes
 app.use('/api', router);
 
