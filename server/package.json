@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Server for TypeScript project",
   "scripts": {
-    "start": "ts-node-dev --respawn api/index.ts"
+    "start": "ts-node-dev --respawn netlify/functions/api.ts",
+    "build": "tsc",
+    "dev": "netlify dev"
   },
   "dependencies": {
     "@netlify/functions": "^3.0.1",
