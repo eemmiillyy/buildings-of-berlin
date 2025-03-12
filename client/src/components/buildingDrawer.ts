@@ -5,8 +5,8 @@ import apiClient from '../services/apiClient';
 import { v4 as uuidv4 } from 'uuid';
 let allBuildings: BuildingItem[] = [];
 let onBuildingAdded: ((building: BuildingItem) => void) | null = null;
-let initialX: number | null = null;
-let initialY: number | null = null;
+let xcoordinate: number | null = null;
+let ycoordinate: number | null = null;
 
 /**
  * Sets the buildings array reference
@@ -29,10 +29,10 @@ export function setOnBuildingAdded(callback: (building: BuildingItem) => void): 
  * @param x Optional x-coordinate for the new building
  * @param y Optional y-coordinate for the new building
  */
-export function openAddBuildingDrawer(x?: number, y?: number): void {
+export function openAddBuildingDrawer(x: number, y: number): void {
   // Store the coordinates
-  initialX = x !== undefined ? x : null;
-  initialY = y !== undefined ? y : null;
+  xcoordinate = x;
+  ycoordinate = y;
   
   // Update drawer title
   const title = 'Add New Building';
@@ -57,8 +57,8 @@ async function handleBuildingSubmit(building: Omit<BuildingItem, 'id'>): Promise
     ...building,
     id: uuidv4(),
     // Adjust coordinates to center the marker (subtract half of marker width/height - 20px/2)
-    xcoordinate: initialX !== null ? initialX - 10 : building.xcoordinate,
-    ycoordinate: initialY !== null ? initialY - 10 : building.ycoordinate
+    xcoordinate: xcoordinate!,
+    ycoordinate: ycoordinate!,
   };
 
   await apiClient.post('/buildings', newBuilding);
@@ -78,8 +78,8 @@ async function handleBuildingSubmit(building: Omit<BuildingItem, 'id'>): Promise
   resetBuildingForm();
   
   // Reset the stored coordinates
-  initialX = null;
-  initialY = null;
+  xcoordinate = null;
+  ycoordinate = null;
 }
 
 /**
@@ -90,6 +90,6 @@ function handleBuildingCancel(): void {
   closeDrawer();
   
   // Reset the stored coordinates
-  initialX = null;
-  initialY = null;
+  xcoordinate = null;
+  ycoordinate = null;
 } 

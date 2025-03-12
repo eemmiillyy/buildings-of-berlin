@@ -1,0 +1,10 @@
+{
+  "name": "sql_2ebf4b9df037c7",
+  "operations": [
+    {
+      "sql": {
+        "up": "ALTER TABLE \"public\".\"buildings\" ALTER COLUMN \"xcoordinate\" SET DATA TYPE float8;"
+      }
+    }
+  ]
+}
