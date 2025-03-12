@@ -218,6 +218,11 @@ app.use(cors({
 // Connect API routes
 app.use('/api', router);
 
+
+// Create application/x-www-form-urlencoded parser
+
+app.use(express.static('public'));
+
 // Start server
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
