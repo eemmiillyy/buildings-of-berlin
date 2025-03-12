@@ -69,7 +69,7 @@ function createBuildingMarker(building: BuildingItem): L.Marker {
     const marker = L.marker([building.ycoordinate, building.xcoordinate], {
         draggable: true,
         icon: L.divIcon({
-            html: '✕',
+            html: '📍',
             className: 'building-marker',
             iconSize: [20, 20]
         })
@@ -167,7 +167,7 @@ export async function initializeDraggableCanvas(): Promise<void> {
         temporaryMarker = L.marker(e.latlng, {
             draggable: true,
             icon: L.divIcon({
-                html: '✕',
+                html: '📍',
                 className: 'building-marker',
                 iconSize: [20, 20]  
             })
