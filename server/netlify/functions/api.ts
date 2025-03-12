@@ -194,5 +194,5 @@ app.get('/', (req, res) => {
   res.send('Hello World');
 });
 
-
-export const handler = serverless(app)
+// Remove the app.listen part and export the handler
+export const handler = serverless(app);
