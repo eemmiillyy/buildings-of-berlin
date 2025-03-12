@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
-import { Pool, PoolClient } from 'pg';
+import { Pool } from 'pg';
 
 
 // Load environment variables from .env.local
@@ -60,36 +60,6 @@ async function query(text: string, params?: any[]) {
   }
 }
 
-/**
- * Get a client from the pool
- * @returns A client from the pool
- */
-async function getClient() {
-  const client = await pool.connect();
-  const query = client.query;
-  const release = client.release;
-  
-  // Set a timeout of 5 seconds, after which we will log this client's last query
-  // Add lastQuery property to client type
-  const clientWithLastQuery = client as PoolClient & { lastQuery?: any };
-
-  const timeout = setTimeout(() => {
-    console.error('A client has been checked out for more than 5 seconds!');
-    console.error(`The last executed query on this client was: ${clientWithLastQuery.lastQuery}`);
-  }, 5000);
-  
-  
-  client.release = () => {
-    // Clear the timeout
-    clearTimeout(timeout);
-    // Set the methods back to their old implementation
-    client.query = query;
-    client.release = release;
-    return release.apply(client);
-  };
-  
-  return client;
-}
 
 const router = express.Router();
 
@@ -217,6 +187,10 @@ app.use(cors({
 
 // Connect API routes
 app.use('/api', router);
+
+app.get('/', (req, res) => {
+  res.send('Hello World');
+});
 
 
 // Create application/x-www-form-urlencoded parser
