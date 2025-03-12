@@ -10,6 +10,7 @@ let buildings: BuildingItem[] = [];
 let map: L.Map;
 let markers: { [key: string]: L.Marker } = {};
 let temporaryMarker: L.Marker | null = null;
+let selectedDesigners: Set<string> = new Set();
 
 async function getBuildings() {
     const response = await apiClient.get('/buildings');
@@ -19,6 +20,46 @@ async function getBuildings() {
 async function getImpressions(buildingId: string) {
     const response = await apiClient.get(`/buildings/${buildingId}/impressions`);
     return response.data;
+}
+
+async function getDesigners(): Promise<string[]> {
+    const response = await apiClient.get('/designers');
+    return response.data;
+}
+
+function filterMarkersByDesigner() {
+    buildings.forEach(building => {
+        const marker = markers[building.id];
+        if (selectedDesigners.size === 0 || selectedDesigners.has(building.designer)) {
+            marker.addTo(map);
+        } else {
+            marker.remove();
+        }
+    });
+}
+
+function createDesignerButtons(designers: string[]): HTMLElement {
+    const container = document.createElement('div');
+    container.className = 'designer-buttons';
+    
+    designers.forEach(designer => {
+        const button = document.createElement('button');
+        button.className = 'designer-button';
+        button.textContent = designer;
+        button.addEventListener('click', () => {
+            if (selectedDesigners.has(designer)) {
+                selectedDesigners.delete(designer);
+                button.classList.remove('active');
+            } else {
+                selectedDesigners.add(designer);
+                button.classList.add('active');
+            }
+            filterMarkersByDesigner();
+        });
+        container.appendChild(button);
+    });
+    
+    return container;
 }
 
 // Create a building marker
@@ -92,8 +133,16 @@ export async function initializeDraggableCanvas(): Promise<void> {
     // Create the drawer
     createDrawer();
 
-    // Get buildings
+    // Get buildings and designers
     buildings = await getBuildings();
+    const designers = await getDesigners();
+    
+    // Create and add designer filter buttons to sidebar
+    const designerButtons = createDesignerButtons(designers);
+    const designerFilter = document.getElementById('designer-filter');
+    if (designerFilter && designerFilter.parentNode) {
+        designerFilter.parentNode.replaceChild(designerButtons, designerFilter);
+    }
     
     // Share the buildings array with the drawer
     setBuildings(buildings);

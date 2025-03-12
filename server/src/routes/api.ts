@@ -96,4 +96,19 @@ router.post('/buildings/:id/impressions', async (req, res) => {
   }
 });
 
+// Add this new endpoint to get unique designers
+router.get('/designers', async (req, res) => {
+  try {
+    const result = await query(`
+      SELECT DISTINCT LOWER(designer) as designer 
+      FROM buildings 
+      ORDER BY LOWER(designer) ASC
+    `);
+    res.json(result.rows.map(row => row.designer));
+  } catch (err) {
+    console.error('Error fetching designers:', err);
+    res.status(500).json({ error: 'Failed to fetch designers' });
+  }
+});
+
 export default router; 
