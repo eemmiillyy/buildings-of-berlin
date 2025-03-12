@@ -14,14 +14,14 @@
       "use": "@vercel/node",
       "config": {
         "buildCommand": "cd server && npm install && npm run build",
-        "outputDirectory": "server/dist"
+        "outputDirectory": "server/public"
       }
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "server/dist/api/$1.ts"
+      "dest": "server/public/api/$1.ts"
     },
     {
       "src": "/(.*)",

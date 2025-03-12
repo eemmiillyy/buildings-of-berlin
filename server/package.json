@@ -4,7 +4,7 @@
   "description": "Server for TypeScript project",
   "scripts": {
     "start": "ts-node-dev --respawn src/index.ts",
-    "build": "tsc"
+    "build": "tsc --outDir public"
   },
   "dependencies": {
     "cors": "^2.8.5",
