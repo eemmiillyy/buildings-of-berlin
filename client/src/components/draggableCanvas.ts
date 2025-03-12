@@ -124,7 +124,7 @@ function createBuildingMarker(building: BuildingItem): L.Marker {
 // Initialize map
 export async function initializeDraggableCanvas(): Promise<void> {
     // Create map centered on Berlin
-    map = L.map('map').setView([52.52, 13.405], 13);
+    map = L.map('map').setView([52.52, 13.405], 12);
 
     // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
