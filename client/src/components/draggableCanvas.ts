@@ -30,7 +30,8 @@ async function getDesigners(): Promise<string[]> {
 function filterMarkersByDesigner() {
     buildings.forEach(building => {
         const marker = markers[building.id];
-        if (selectedDesigners.size === 0 || selectedDesigners.has(building.designer)) {
+        if (selectedDesigners.size === 0 || 
+            selectedDesigners.has(building.designer.toLowerCase())) {
             marker.addTo(map);
         } else {
             marker.remove();
@@ -45,13 +46,13 @@ function createDesignerButtons(designers: string[]): HTMLElement {
     designers.forEach(designer => {
         const button = document.createElement('button');
         button.className = 'designer-button';
-        button.textContent = designer;
+        button.textContent = designer.charAt(0).toUpperCase() + designer.slice(1);
         button.addEventListener('click', () => {
-            if (selectedDesigners.has(designer)) {
-                selectedDesigners.delete(designer);
+            if (selectedDesigners.has(designer.toLowerCase())) {
+                selectedDesigners.delete(designer.toLowerCase());
                 button.classList.remove('active');
             } else {
-                selectedDesigners.add(designer);
+                selectedDesigners.add(designer.toLowerCase());
                 button.classList.add('active');
             }
             filterMarkersByDesigner();
