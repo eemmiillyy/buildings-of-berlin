@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "Server for TypeScript project",
   "scripts": {
-    "start": "ts-node-dev --respawn src/index.ts",
-    "build": "tsc --outDir public"
+    "start": "ts-node-dev --respawn api/index.ts"
   },
   "dependencies": {
     "cors": "^2.8.5",
