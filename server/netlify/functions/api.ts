@@ -183,9 +183,8 @@ app.use(express.json());
 
 app.use(cors({
     origin: process.env.NODE_ENV === 'production' 
-      ? 'https://buildings-of-berlin-fe.netlify.app' 
-      : 'http://localhost:8080',
-    credentials: true
+      ? 'https://buildings-of-berlin-fe.netlify.app'
+      : 'http://localhost:8080'
   }));
 
 // Connect API routes
