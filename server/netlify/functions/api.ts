@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { Pool } from 'pg';
-
+import serverless from "serverless-http";
 
 // Load environment variables from .env.local
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
@@ -188,9 +188,9 @@ app.use(cors({
 // Connect API routes
 app.use('/api', router);
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-}); 
+app.get('/', (req, res) => {
+  res.send('Hello World');
+});
 
-module.exports = app;
+
+export const handler = serverless(app)
