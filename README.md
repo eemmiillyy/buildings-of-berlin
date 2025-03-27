@@ -2,6 +2,7 @@
 
 - You will need to have node and npm installed to run the project.
 - You will need a dev database to develop against. When this is setup, you'll need to migrate the schema according to the maki migrations inside of .maki folder. 
+- You will need to have a .env.local file in the server folder with the values from .env.example populated with your new database connection string and `development` as the NODE_ENV.
 
 ## Setup Instructions
 

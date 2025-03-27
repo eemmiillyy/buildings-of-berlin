@@ -1,4 +1,5 @@
 import { BuildingItem } from '../models/types';
+import { BERLIN_NEIGHBORHOODS, ARCHITECTURAL_ERAS } from '../constants';
 
 let formElement: HTMLElement | null = null;
 let onSubmitCallback: ((building: Omit<BuildingItem, 'id'>) => void) | null = null;
@@ -25,9 +26,6 @@ export function createAddBuildingForm(): HTMLElement {
 function updateFormContent(): void {
     if (!formElement) return;
     
-    const neighbourhoods = ['Kreuzberg', 'Mitte', 'Charlottenburg', 'Neukölln', 'Prenzlauer Berg', 'Wedding'];
-    const eras = ['Modernism', 'Postmodernism', 'Baroque', 'Contemporary', 'Brutalism', 'Art Nouveau'];
-    
     formElement.innerHTML = `
         <h3>Add New Building</h3>
         <form id="building-form">
@@ -47,10 +45,10 @@ function updateFormContent(): void {
             </div>
             
             <div class="form-group">
-                <label for="building-neighbourhood">neighbourhood</label>
+                <label for="building-neighbourhood">Neighbourhood</label>
                 <select id="building-neighbourhood" name="neighbourhood" required>
                     <option value="">Select a neighbourhood</option>
-                    ${neighbourhoods.map(n => `<option value="${n.toLowerCase()}">${n}</option>`).join('')}
+                    ${BERLIN_NEIGHBORHOODS.map(n => `<option value="${n.toLowerCase()}">${n}</option>`).join('')}
                 </select>
             </div>
             
@@ -58,7 +56,7 @@ function updateFormContent(): void {
                 <label for="building-era">Era</label>
                 <select id="building-era" name="era" required>
                     <option value="">Select an era</option>
-                    ${eras.map(e => `<option value="${e.toLowerCase()}">${e}</option>`).join('')}
+                    ${ARCHITECTURAL_ERAS.map(e => `<option value="${e.toLowerCase()}">${e}</option>`).join('')}
                 </select>
             </div>
             
