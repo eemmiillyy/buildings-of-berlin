@@ -43,6 +43,27 @@ function createDesignerButtons(designers: string[]): HTMLElement {
     const container = document.createElement('div');
     container.className = 'designer-buttons';
     
+    // Create mobile select
+    const mobileSelect = document.getElementById('mobile-designer-filter') as HTMLSelectElement;
+    if (mobileSelect) {
+        designers.forEach(designer => {
+            const option = document.createElement('option');
+            option.value = designer.toLowerCase();
+            option.textContent = designer;
+            mobileSelect.appendChild(option);
+        });
+
+        mobileSelect.addEventListener('change', (e) => {
+            const target = e.target as HTMLSelectElement;
+            selectedDesigners.clear();
+            if (target.value !== 'all') {
+                selectedDesigners.add(target.value);
+            }
+            filterMarkersByDesigner();
+        });
+    }
+    
+    // Create regular buttons for desktop
     designers.forEach(designer => {
         const button = document.createElement('button');
         button.className = 'designer-button';
@@ -67,7 +88,6 @@ function createDesignerButtons(designers: string[]): HTMLElement {
 function createBuildingMarker(building: BuildingItem): L.Marker {
     // Create marker
     const marker = L.marker([building.ycoordinate, building.xcoordinate], {
-        draggable: true,
         icon: L.divIcon({
             html: '📍',
             className: 'building-marker',
