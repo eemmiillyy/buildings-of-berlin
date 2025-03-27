@@ -66,8 +66,7 @@ const router = express.Router();
 // Get all buildings
 router.get('/buildings', async (req, res) => {
   try {
-    const result = await query('SELECT * FROM buildings ORDER BY "createdAt" DESC');
-    console.log(result.rows);
+    const result = await query('SELECT * FROM "public"."buildings" ORDER BY "createdAt" DESC');
     res.json(result.rows);
   } catch (err) {
     console.error('Error fetching buildings:', err);
@@ -79,7 +78,7 @@ router.get('/buildings', async (req, res) => {
 router.get('/buildings/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await query('SELECT * FROM buildings WHERE id = $1', [id]);
+    const result = await query('SELECT * FROM "public"."buildings" WHERE id = $1', [id]);
     
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Building not found' });
@@ -103,7 +102,7 @@ router.post('/buildings', async (req, res) => {
     }
     
     const result = await query(
-      'INSERT INTO buildings (id,  title, designer, year, neighbourhood, era, xcoordinate, ycoordinate) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+      'INSERT INTO "public"."buildings" (id,  title, designer, year, neighbourhood, era, xcoordinate, ycoordinate) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
       [id, title, designer, year, neighbourhood, era, xcoordinate, ycoordinate]
     );
     
@@ -118,7 +117,7 @@ router.post('/buildings', async (req, res) => {
 router.get('/buildings/:id/impressions', async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await query('SELECT * FROM impressions WHERE "buildingId" = $1 ORDER BY "createdAt" DESC', [id]);
+    const result = await query('SELECT * FROM "public"."impressions" WHERE "buildingId" = $1 ORDER BY "createdAt" DESC', [id]);
     res.json(result.rows);
   } catch (err) {
     console.error('Error fetching impressions:', err);
@@ -138,14 +137,14 @@ router.post('/buildings/:id/impressions', async (req, res) => {
     }
     
     // Check if building exists
-    const buildingCheck = await query('SELECT id FROM buildings WHERE id = $1', [buildingId]);
+    const buildingCheck = await query('SELECT id FROM "public"."buildings" WHERE id = $1', [buildingId]);
     if (buildingCheck.rows.length === 0) {
       return res.status(404).json({ error: 'Building not found' });
     }
     
     // Insert the impression
     const result = await query(
-      'INSERT INTO impressions (id, "buildingId", content, moods, photos, hyperlinks) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      'INSERT INTO "public"."impressions" (id, "buildingId", content, moods, photos, hyperlinks) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
       [impressionId, buildingId, content, `{${moods.join(',')}}`, `{${photos.join(',')}}`, `{${hyperlinks.join(',')}}`]
     );
       
@@ -156,12 +155,11 @@ router.post('/buildings/:id/impressions', async (req, res) => {
   }
 });
 
-// Add this new endpoint to get unique designers
 router.get('/designers', async (req, res) => {
   try {
     const result = await query(`
       SELECT DISTINCT LOWER(designer) as designer 
-      FROM buildings 
+      FROM "public"."buildings" 
       ORDER BY LOWER(designer) ASC
     `);
     res.json(result.rows.map(row => row.designer));
