@@ -1,4 +1,4 @@
-# Preqrequisites
+# Prerequisites
 
 - You will need to have node and npm installed to run the project.
 - You will need a dev database to develop against. When this is setup, you'll need to migrate the schema according to the maki migrations inside of .maki folder. 
