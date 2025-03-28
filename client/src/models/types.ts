@@ -36,6 +36,7 @@ export interface BuildingItem {
     xcoordinate: number; // longitude
     ycoordinate: number; // latitude
     createdAt: string;
+    images: string[];
 }
 
 export interface DraggableItem {

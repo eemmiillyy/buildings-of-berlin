@@ -4,7 +4,9 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { Pool } from 'pg';
 import serverless from "serverless-http";
-
+import { getStore } from "@netlify/blobs"
+import { nanoid } from 'nanoid';
+import { generateImageName } from '../../src/utils'
 // Load environment variables from .env.local
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 
@@ -12,7 +14,13 @@ dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 if (!process.env.DB_URL) {
   console.error('Database URL is not defined in .env.local file');
   process.exit(1);
-}
+} 
+
+const buildingImagesStore = getStore({
+  name: "building-images",
+  siteID: process.env.NETLIFY_SITE_ID,
+  token: process.env.NETLIFY_TOKEN
+});
 
 // Create a new pool using the connection string from .env.local
 const url = new URL(process.env.DB_URL);
@@ -41,6 +49,8 @@ pool.connect()
     console.error('Error connecting to PostgreSQL database:', err);
   });
 
+
+
 /**
  * Execute a query with parameters
  * @param text The SQL query text
@@ -60,7 +70,6 @@ async function query(text: string, params?: any[]) {
   }
 }
 
-
 const router = express.Router();
 
 // Get all buildings
@@ -73,6 +82,7 @@ router.get('/buildings', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch buildings' });
   }
 });
+
 
 // Get a specific building by ID
 router.get('/buildings/:id', async (req, res) => {
@@ -91,22 +101,75 @@ router.get('/buildings/:id', async (req, res) => {
   }
 });
 
+router.post('/upload/image', async (req, res) => {
+  try {
+  const formData = req.body as File;
+  const filename = `${generateImageName()}-${nanoid(20)}`;
+  await buildingImagesStore.set(filename, formData);
+  
+    res.json({ filename });
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    res.status(500).json({ error: 'Failed to upload image' });
+  }
+});
+
+router.get('/image/:filename', async (req, res) => {
+  try {
+    const { filename } = req.params;
+    const data = await buildingImagesStore.get(filename);
+    if (!data) {
+      throw new Error('Image not found');
+    }
+    // Send the blob
+    res.end(data);
+
+  } catch (error) {
+    console.error('Error fetching image:', error);
+    res.status(500).json({ error: 'Failed to fetch image' });
+  }
+});
+
+router.delete('/delete/image', async (req, res) => {
+  try {
+    const { filename } = req.body;
+    await buildingImagesStore.delete(filename);
+    res.json({ message: 'Image deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting image:', error);
+    res.status(500).json({ error: 'Failed to delete image' });
+  }
+});
+
+
 // Create a new building
 router.post('/buildings', async (req, res) => {
   try {
-    const { id, title, designer, year, neighbourhood, era, xcoordinate, ycoordinate } = req.body;
+    const { id, title, designer, year, neighbourhood, era, xcoordinate, ycoordinate, images } = req.body;
     
     // Validate required fields
     if (!id || !title || !designer || !year || !neighbourhood || !era || xcoordinate === undefined || ycoordinate === undefined) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
     
+    // If images array is empty, use a query without the images column
+    if (!images?.length) {
+      console.log("NO IMAGES")
+      const result = await query(
+        'INSERT INTO "public"."buildings" (id, title, designer, year, neighbourhood, era, xcoordinate, ycoordinate) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+        [id, title, designer, year, neighbourhood, era, xcoordinate, ycoordinate]
+      );
+      return res.status(201).json(result.rows[0]);
+    }
+    console.log("IMAGES", images)
+    // If images exist, include them in the query
     const result = await query(
-      'INSERT INTO "public"."buildings" (id,  title, designer, year, neighbourhood, era, xcoordinate, ycoordinate) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
-      [id, title, designer, year, neighbourhood, era, xcoordinate, ycoordinate]
+      'INSERT INTO "public"."buildings" (id, title, designer, year, neighbourhood, era, xcoordinate, ycoordinate, images) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
+      [id, title, designer, year, neighbourhood, era, xcoordinate, ycoordinate, JSON.stringify(images)]
     );
     
     res.status(201).json(result.rows[0]);
+
   } catch (err) {
     console.error('Error creating building:', err);
     res.status(500).json({ error: 'Failed to create building' });
@@ -191,6 +254,8 @@ app.use('/api', router);
 app.get('/', (req, res) => {
   res.send('Hello World');
 });
+
+
 
 // Remove the app.listen part and export the handler
 export const handler = serverless(app);

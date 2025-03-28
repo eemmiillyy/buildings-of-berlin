@@ -85,7 +85,7 @@ function createDesignerButtons(designers: string[]): HTMLElement {
 }
 
 // Create a building marker
-function createBuildingMarker(building: BuildingItem): L.Marker {
+async function createBuildingMarker(building: BuildingItem): Promise<L.Marker> {
     // Create marker
     const marker = L.marker([building.ycoordinate, building.xcoordinate], {
         icon: L.divIcon({
@@ -98,6 +98,30 @@ function createBuildingMarker(building: BuildingItem): L.Marker {
     // Create popup content
     const popupContent = document.createElement('div');
     popupContent.className = 'building-popup';
+
+    // Create image gallery container
+    const imageGallery = document.createElement('div');
+    imageGallery.className = 'building-images';
+    
+    // Fetch and display images if they exist
+    if (building.images && building.images.length > 0) {
+        try {
+            building.images.forEach(async (filename) => {
+                const response = await apiClient.get(`/image/${filename}`);
+                
+            
+                
+                const img = document.createElement('img');
+                img.src = response.data // Assuming JPEG, adjust if needed
+                img.className = 'building-popup-image';
+                imageGallery.appendChild(img);
+            });
+        } catch (error) {
+            console.error('Failed to load building images:', error);
+            imageGallery.innerHTML = '<p>Failed to load images</p>';
+        }
+    }
+
     popupContent.innerHTML = `
         <h3>${building.title}</h3>
         <p><strong>Designer:</strong> ${building.designer}</p>
@@ -108,6 +132,12 @@ function createBuildingMarker(building: BuildingItem): L.Marker {
             <button class="view-impressions">view impressions ${generateMood('eyes')}</button>
         </div>
     `;
+
+    // Insert image gallery after title
+    const title = popupContent.querySelector('h3');
+    if (title) {
+        title.after(imageGallery);
+    }
 
     // Add click handler for view impressions button
     const viewButton = popupContent.querySelector('.view-impressions');
@@ -170,8 +200,8 @@ export async function initializeDraggableCanvas(): Promise<void> {
     setOnBuildingAdded(handleNewBuilding);
     
     // Add building markers to map
-    buildings.forEach(building => {
-        const marker = createBuildingMarker(building);
+    buildings.forEach(async (building) => {
+        const marker = await createBuildingMarker(building);
         markers[building.id] = marker;
         marker.addTo(map);
     });
@@ -197,8 +227,8 @@ export async function initializeDraggableCanvas(): Promise<void> {
     });
 }
 
-function handleNewBuilding(building: BuildingItem): void {
-    const marker = createBuildingMarker(building);
+async function handleNewBuilding(building: BuildingItem): Promise<void> {
+    const marker = await createBuildingMarker(building);
     markers[building.id] = marker;
     marker.addTo(map);
 }
