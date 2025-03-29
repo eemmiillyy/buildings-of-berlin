@@ -6,9 +6,12 @@ import { Pool } from 'pg';
 import serverless from "serverless-http";
 import { getStore } from "@netlify/blobs"
 import { nanoid } from 'nanoid';
-import { generateImageName } from '../../src/utils'
+  import { generateImageName } from '../../src/utils'
 // Load environment variables from .env.local
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
+
+export const IMAGE_BUCKET_PRODUCTION = "building-images";
+export const IMAGE_BUCKET_DEV = "building-images-dev";
 
 // Check if the database URL is defined
 if (!process.env.DB_URL) {
@@ -17,7 +20,7 @@ if (!process.env.DB_URL) {
 } 
 
 const buildingImagesStore = getStore({
-  name: "building-images",
+  name: process.env.NODE_ENV === 'production' ? IMAGE_BUCKET_PRODUCTION : IMAGE_BUCKET_DEV,
   siteID: process.env.NETLIFY_SITE_ID,
   token: process.env.NETLIFY_TOKEN
 });

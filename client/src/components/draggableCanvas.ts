@@ -105,21 +105,18 @@ async function createBuildingMarker(building: BuildingItem): Promise<L.Marker> {
     
     // Fetch and display images if they exist
     if (building.images && building.images.length > 0) {
-        try {
-            building.images.forEach(async (filename) => {
+        building.images.forEach(async (filename) => {
+            try {
                 const response = await apiClient.get(`/image/${filename}`);
-                
-            
-                
                 const img = document.createElement('img');
                 img.src = response.data // Assuming JPEG, adjust if needed
                 img.className = 'building-popup-image';
                 imageGallery.appendChild(img);
-            });
-        } catch (error) {
-            console.error('Failed to load building images:', error);
-            imageGallery.innerHTML = '<p>Failed to load images</p>';
-        }
+            } catch (error) {
+                console.error(`Failed to load building images for ${building.title}:`, error);
+                imageGallery.innerHTML = '<p>Failed to load images</p>';
+            }
+        });   
     }
 
     popupContent.innerHTML = `
