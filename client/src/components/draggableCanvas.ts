@@ -1,8 +1,8 @@
 import { generateMood } from "../utils";
-import { BuildingItem, ImpressionItem } from "../models/types";
+import { BuildingItem } from "../models/types";
 import { openImpressionsDrawer } from "./impressionsDrawer";
 import { openAddBuildingDrawer, setBuildings, setOnBuildingAdded } from "./buildingDrawer";
-import { createDrawer, isOpen, closeDrawer } from "./drawer";
+import { createDrawer } from "./drawer";
 import apiClient from "../services/apiClient";
 import L from "leaflet";
 import { ImageCarousel } from './imageCarousel';
@@ -108,6 +108,17 @@ async function createBuildingMarker(building: BuildingItem): Promise<L.Marker> {
     // Fetch and display images if they exist
     if (building.images && building.images.length > 0) {
         const images: HTMLImageElement[] = [];
+        
+        // Create loading placeholders first
+        building.images.forEach(() => {
+            const placeholder = document.createElement('div');
+            placeholder.className = 'image-loading-placeholder';
+            placeholder.innerHTML = `
+                <div class="loading-spinner"></div>
+                <p>Loading...</p>
+            `;
+            imageGallery.appendChild(placeholder);
+        });
             
         building.images.forEach(async (filename, index) => {
             try {
@@ -125,10 +136,19 @@ async function createBuildingMarker(building: BuildingItem): Promise<L.Marker> {
                     imageCarousel.show(images, images.indexOf(img));
                 };
             
-                imageGallery.appendChild(img);
+                // Replace the placeholder with the actual image
+                const placeholder = imageGallery.children[index];
+                if (placeholder) {
+                    imageGallery.replaceChild(img, placeholder);
+                }
             } catch (error) {
                 console.error('Failed to load image:', error);
-                imageGallery.innerHTML = '<p>Failed to load images</p>';
+                // Replace placeholder with error message
+                const placeholder = imageGallery.children[index];
+                if (placeholder) {
+                    placeholder.innerHTML = '<p>Failed to load image</p>';
+                    placeholder.className = 'image-loading-error';
+                }
             }
         });
     }
