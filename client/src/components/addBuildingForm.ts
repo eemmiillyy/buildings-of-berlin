@@ -14,7 +14,7 @@ interface SelectedImage {
 
 let selectedImages: SelectedImage[] = [];
 const MAX_IMAGES = 3;
-const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4MB in bytes
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
 
 /**
  * Creates the add building form
@@ -48,7 +48,7 @@ function updateFormContent(): void {
             <div class="form-group">
                 <label for="building-images">Images</label>
                 <input type="file" id="building-images" name="images" multiple accept="image/*">
-                <small class="helper-text">Maximum 4MB per file</small>
+                <small class="helper-text">Maximum 2MB per file</small>
                 <div class="image-preview"></div>
             </div>
             
@@ -141,16 +141,14 @@ function attachEventListeners(): void {
                 }
                 
                 if (file.size > MAX_FILE_SIZE) {
-                    alert(`File "${file.name}" exceeds 4MB limit`);
+                    alert(`File "${file.name}" exceeds 2MB limit`);
                     continue;
                 }
                 
                 try {
                     // Upload to blob storage immediately
                     const formData = await convertFileToBase64(file)
-                    console.log("FORM DATA", formData)
                     const response = await apiClient.post('/upload/image', formData.imageData) as any;
-                      console.log("RESPONSE CAME BACK...... URL", response.data.filename)
                     
                     // Add to selected images
                     selectedImages.push({ file, filename: response.data.filename });

@@ -5,12 +5,14 @@ import { openAddBuildingDrawer, setBuildings, setOnBuildingAdded } from "./build
 import { createDrawer, isOpen, closeDrawer } from "./drawer";
 import apiClient from "../services/apiClient";
 import L from "leaflet";
+import { ImageCarousel } from './imageCarousel';
 
 let buildings: BuildingItem[] = [];
 let map: L.Map;
 let markers: { [key: string]: L.Marker } = {};
 let temporaryMarker: L.Marker | null = null;
 let selectedDesigners: Set<string> = new Set();
+const imageCarousel = new ImageCarousel();
 
 async function getBuildings() {
     const response = await apiClient.get('/buildings');
@@ -105,18 +107,30 @@ async function createBuildingMarker(building: BuildingItem): Promise<L.Marker> {
     
     // Fetch and display images if they exist
     if (building.images && building.images.length > 0) {
-        building.images.forEach(async (filename) => {
+        const images: HTMLImageElement[] = [];
+            
+        building.images.forEach(async (filename, index) => {
             try {
-                const response = await apiClient.get(`/image/${filename}`);
+                const response = await apiClient.get(`/image/${building.images[index]}`);                    
                 const img = document.createElement('img');
-                img.src = response.data // Assuming JPEG, adjust if needed
+                img.src = response.data;
                 img.className = 'building-popup-image';
+                img.style.cursor = 'pointer';
+        
+                // Store the image element in our array
+                images.push(img);
+        
+                img.onclick = () => {
+                    // Show all images in the carousel, starting at this image's index
+                    imageCarousel.show(images, images.indexOf(img));
+                };
+            
                 imageGallery.appendChild(img);
             } catch (error) {
-                console.error(`Failed to load building images for ${building.title}:`, error);
+                console.error('Failed to load image:', error);
                 imageGallery.innerHTML = '<p>Failed to load images</p>';
             }
-        });   
+        });
     }
 
     popupContent.innerHTML = `
