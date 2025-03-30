@@ -20,7 +20,7 @@ if (!process.env.DB_URL) {
 } 
 
 const buildingImagesStore = getStore({
-  name: process.env.NODE_ENV === 'production' ? IMAGE_BUCKET_PRODUCTION : IMAGE_BUCKET_DEV,
+  name: process.env.NODE_ENV !== 'development' ? IMAGE_BUCKET_PRODUCTION : IMAGE_BUCKET_DEV,
   siteID: process.env.NETLIFY_SITE_ID,
   token: process.env.NETLIFY_TOKEN
 });
