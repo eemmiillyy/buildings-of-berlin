@@ -31,3 +31,20 @@ export const generateMood = (mood: Mood): string => {
     return asciiEyes[mood];
 };
 
+export const convertFileToBase64 = (file: File): Promise<{ imageData: string }> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    
+    reader.onload = () => {
+      resolve({
+        imageData: reader.result as string
+      });
+    };
+    
+    reader.onerror = (error) => {
+      reject(error);
+    };
+
+    reader.readAsDataURL(file);
+  });
+};
