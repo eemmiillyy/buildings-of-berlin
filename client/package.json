@@ -4,13 +4,15 @@
   "description": "Client for TypeScript project",
   "scripts": {
     "start": "webpack serve --mode development",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "upload": "tsx ./src/scripts/index.ts"
   },
   "dependencies": {
     "@types/leaflet": "^1.9.16",
     "axios": "^1.4.0",
     "leaflet": "^1.9.4",
     "swiper": "^11.2.6",
+    "tsx": "^4.19.3",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

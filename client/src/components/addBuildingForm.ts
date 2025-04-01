@@ -148,7 +148,7 @@ function attachEventListeners(): void {
                 try {
                     // Upload to blob storage immediately
                     const formData = await convertFileToBase64(file)
-                    const response = await apiClient.post('/upload/image', formData.imageData) as any;
+                    const response = await apiClient.post('/upload/image', formData.imageData);
                     
                     // Add to selected images
                     selectedImages.push({ file, filename: response.data.filename });
