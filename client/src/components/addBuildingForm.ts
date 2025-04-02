@@ -13,8 +13,9 @@ interface SelectedImage {
 }
 
 let selectedImages: SelectedImage[] = [];
-const MAX_IMAGES = 3;
-const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
+const MAX_IMAGES = 6;
+const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3MB in bytes
+const MAX_FILE_SIZE_MB = 3;
 
 /**
  * Creates the add building form
@@ -48,7 +49,7 @@ function updateFormContent(): void {
             <div class="form-group">
                 <label for="building-images">Images</label>
                 <input type="file" id="building-images" name="images" multiple accept="image/*">
-                <small class="helper-text">Maximum 2MB per file</small>
+                <small class="helper-text">Maximum ${MAX_FILE_SIZE_MB}MB per file</small>
                 <div class="image-preview"></div>
             </div>
             
@@ -141,7 +142,7 @@ function attachEventListeners(): void {
                 }
                 
                 if (file.size > MAX_FILE_SIZE) {
-                    alert(`File "${file.name}" exceeds 2MB limit`);
+                    alert(`File "${file.name}" exceeds ${MAX_FILE_SIZE_MB}MB limit`);
                     continue;
                 }
                 
