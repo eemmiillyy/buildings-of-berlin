@@ -2,7 +2,17 @@ import * as fs from 'fs';
 import * as path from 'path';
 import apiClient from '../services/apiClient';
 
-const buildingId = "f8ba8f15-6f36-43d1-bbc1-d1951726b7df";
+/**
+ * IMPORTANT:
+ * before running this script, you need to have a building id and the images you want to upload.
+ * The images should be in the ./client/images folder.
+ * 
+ * Run the script with:
+ * npm run upload
+ * 
+ * Make sure the correct environment variables are being used (bucket name and DATABASE_URL)
+ */
+const buildingId = "";
 const pathToImages = "./images";
 
 
