@@ -29,6 +29,7 @@ export const ARCHITECTURAL_ERAS = [
     'Bauhaus',
     'Gothic Revival',
     'Neo Classical',
+    'Expressionism',
 ] as const;
 
 export type BerlinNeighborhood = typeof BERLIN_NEIGHBORHOODS[number];
